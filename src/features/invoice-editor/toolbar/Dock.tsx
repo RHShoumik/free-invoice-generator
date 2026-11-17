@@ -37,7 +37,7 @@ export function Dock({ leftPanel, onToggleLeftPanel, onOpenDesigns, drawing, onT
   return (
     <nav
       aria-label="Tools"
-      className="absolute bottom-5 left-1/2 z-30 flex -translate-x-1/2 items-center gap-0.5 rounded-2xl bg-white p-1.5 shadow-[0_6px_28px_rgb(21_23_26/0.16)] ring-1 ring-black/5"
+      className="absolute bottom-5 left-1/2 z-30 flex max-w-[calc(100%-1.5rem)] -translate-x-1/2 items-center gap-0.5 overflow-x-auto rounded-2xl bg-white p-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden shadow-[0_6px_28px_rgb(21_23_26/0.16)] ring-1 ring-black/5"
     >
       <DockButton icon={LayoutTemplate} label="Designs" onClick={onOpenDesigns} />
       <DockButton icon={Shapes} label="Elements" active={leftPanel === 'elements'} aria-pressed={leftPanel === 'elements'} onClick={() => onToggleLeftPanel('elements')} />

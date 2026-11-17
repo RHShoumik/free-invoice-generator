@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Credit } from '@/components/Credit'
 import { ZoomToFit } from '@/components/ui/ZoomToFit'
 import { ROBOTS_NOINDEX, SEO_DESCRIPTION } from '../../lib/site'
+import { useIsNarrow } from '../../lib/useIsNarrow'
 import { usePageMeta } from '../../lib/usePageMeta'
 import { useInvoiceStore } from '../../store/invoiceStore'
 import { getTemplate } from '../../templates/registry'
@@ -119,6 +120,9 @@ export function EditorLayout() {
     typeof window === 'undefined' || window.innerWidth >= 1100 ? 'elements' : null,
   )
   const panelOpen = leftPanel !== null
+  // On a phone-sized screen a panel has no room beside the page, so it floats over it instead of pushing it aside.
+  const narrow = useIsNarrow()
+  const makeRoom = panelOpen && !narrow
   // Draw mode: the page takes drags as drawing, and the draw bar stands in for the style pill. The look of
   // the next shape is remembered across visits to the mode.
   const [drawing, setDrawing] = useState(false)
@@ -197,7 +201,7 @@ export function EditorLayout() {
             <div className="relative min-h-0 flex-1">
               <main
                 className="bg-workspace scroll-thin absolute inset-0 overflow-y-auto pb-36 pr-6 pt-20 transition-[padding] duration-200"
-                style={{ paddingLeft: panelOpen ? PANEL_INSET : 24 }}
+                style={{ paddingLeft: makeRoom ? PANEL_INSET : 24 }}
               >
                 <div className="mx-auto max-w-[794px]">
                   <ZoomToFit contentWidth={PAGE_WIDTH}>
@@ -209,7 +213,7 @@ export function EditorLayout() {
               </main>
 
               {panelOpen && (
-                <div className="absolute left-4 top-4 z-30 flex max-h-[calc(100%-8rem)]">
+                <div className={`absolute left-4 z-30 flex max-w-[calc(100%-2rem)] ${narrow ? 'top-[4.75rem] max-h-[calc(100%-13rem)]' : 'top-4 max-h-[calc(100%-8rem)]'}`}>
                   {leftPanel === 'uploads' ? (
                     <UploadsDrawer onClose={() => setLeftPanel(null)} />
                   ) : leftPanel === 'business' ? (
@@ -240,7 +244,7 @@ export function EditorLayout() {
 
               <div
                 className="pointer-events-none absolute inset-x-0 top-4 z-30 flex justify-center pr-4 transition-[padding] duration-200"
-                style={{ paddingLeft: panelOpen ? PANEL_INSET : 16 }}
+                style={{ paddingLeft: makeRoom ? PANEL_INSET : 16 }}
               >
                 {drawing ? (
                   <DrawBar

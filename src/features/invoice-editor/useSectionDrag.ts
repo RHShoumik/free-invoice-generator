@@ -129,6 +129,10 @@ export function useSectionDrag({ wrapperRef, offsets, onCommit, onSelect, enable
     // Pressing anything in a section selects it — even a button or a field that's already
     // being edited, which aren't draggable — so the style toolbar always follows the click.
     onSelect?.(id)
+    // On a phone a finger moving over the page is scrolling it, and a finger tap always drifts a few pixels:
+    // read as a drag it would move the section and swallow the click that starts editing. So a touch only
+    // selects; the press that doesn't move is the tap that edits. (Move sections with a mouse or pen.)
+    if (e.pointerType === 'touch') return
     if (target.closest('[data-no-section-drag], button')) return
     if ((target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) && target === document.activeElement) {
       return

@@ -68,10 +68,19 @@ export function ItemText({ target, children, empty }: ItemTextProps) {
   const start = useRef<{ text: string; override: string | undefined }>({ text: '', override: undefined })
   /** Where the click that began editing landed (null when it began from the keyboard). */
   const clickPoint = useRef<{ x: number; y: number } | null>(null)
+  /** Set while the box is being re-focused on purpose, so that blur is not taken as "the user moved away". */
+  const refocusing = useRef(false)
 
   useLayoutEffect(() => {
     const el = ref.current
     if (!editing || !el) return
+    // A tap focuses the text before the click arrives, while it is still not editable — and a phone only opens
+    // its keyboard when an *editable* element gains focus. So if it is already focused, focus it afresh.
+    if (document.activeElement === el) {
+      refocusing.current = true
+      el.blur()
+      refocusing.current = false
+    }
     el.focus()
     const selection = window.getSelection()
     if (!selection) return
@@ -157,7 +166,9 @@ export function ItemText({ target, children, empty }: ItemTextProps) {
         onInput={handleInput}
         onKeyDown={handleEditingKeyDown}
         onPaste={handlePaste}
-        onBlur={() => setFrozen(null)}
+        onBlur={() => {
+          if (!refocusing.current) setFrozen(null)
+        }}
         className="-mx-0.5 cursor-text rounded-sm bg-current/10 px-0.5 outline-none ring-2 ring-current/40"
       >
         {/* Frozen on purpose: the same string every render, so React never touches the text while it is typed in. */}

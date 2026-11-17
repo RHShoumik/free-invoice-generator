@@ -34,9 +34,9 @@ export function TopBar({ designName, exporting, error, onExport }: TopBarProps) 
         <span className="hidden text-sm font-bold tracking-tight text-ink sm:block">Invoice Generator</span>
       </button>
 
-      <div className="h-5 w-px bg-black/10" />
+      <div className="hidden h-5 w-px bg-black/10 sm:block" />
 
-      <div className="min-w-0 leading-tight">
+      <div className="hidden min-w-0 leading-tight sm:block">
         <p className="truncate text-sm font-semibold text-ink">{designName}</p>
         <p className="flex items-center gap-1.5 text-[11px] text-slate-500">
           <span className="size-1.5 rounded-full bg-brand" /> Saved in this browser

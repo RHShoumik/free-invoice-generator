@@ -12,6 +12,10 @@ function snap(v: number): number {
   return Math.round(v / SNAP) * SNAP
 }
 
+/** Pointer travel (px) before a press on a block becomes a drag, for a mouse and for a finger (about the platform's own tap slop). */
+const MOUSE_DRAG_SLOP = 4
+const TOUCH_DRAG_SLOP = 10
+
 function clampX(x: number): number {
   return Math.min(Math.max(0, x), CANVAS_WIDTH - MIN_BLOCK_WIDTH)
 }
@@ -213,6 +217,8 @@ export function FreeformBlockWrapper({
     if (!canvasEl) return
     const startClientX = e.clientX
     const startClientY = e.clientY
+    // A finger drifts more than a mouse in an ordinary tap, so it needs to travel further to be a drag.
+    const dragSlop = e.pointerType === 'touch' ? TOUCH_DRAG_SLOP : MOUSE_DRAG_SLOP
     const start = toCanvasPoint(e, canvasEl)
     const startRect = rect
     let dragging = false
@@ -221,7 +227,7 @@ export function FreeformBlockWrapper({
       if (!dragging) {
         const dx = ev.clientX - startClientX
         const dy = ev.clientY - startClientY
-        if (Math.hypot(dx, dy) < 4) return
+        if (Math.hypot(dx, dy) < dragSlop) return
         dragging = true
         activeBlock!.onSelect(id)
         window.getSelection()?.removeAllRanges()
