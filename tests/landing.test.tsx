@@ -19,6 +19,7 @@ import {
   SEO_DESCRIPTION,
   SEO_TITLE,
 } from '../src/lib/site'
+import { GUIDES_HEADING } from '../src/lib/seoPages'
 import { useInvoiceStore } from '../src/store/invoiceStore'
 
 beforeAll(() => {
@@ -77,10 +78,10 @@ describe('the landing page', () => {
     expect(text(h1s[0])).toContain(HERO.headline)
   })
 
-  it('lays out its sections as a proper outline: templates, how it works, features, FAQ', () => {
+  it('lays out its sections as a proper outline: templates, how it works, features, guides, FAQ', () => {
     mount()
     const h2s = [...host.querySelectorAll('h2')].map((h) => text(h))
-    expect(h2s).toEqual(['Choose a free invoice template', HOW_IT_WORKS_HEADING, FEATURES_HEADING, FAQ_HEADING])
+    expect(h2s).toEqual(['Choose a free invoice template', HOW_IT_WORKS_HEADING, FEATURES_HEADING, GUIDES_HEADING, FAQ_HEADING])
     // The design groups sit one level under the templates heading.
     expect(host.querySelectorAll('#templates h3').length).toBeGreaterThanOrEqual(21)
   })
@@ -99,7 +100,7 @@ describe('the landing page', () => {
   it('links its own sections from the top, each to a section that exists', () => {
     mount()
     const links = [...host.querySelectorAll<HTMLAnchorElement>('nav[aria-label="Page sections"] a')]
-    expect(links.map((a) => a.getAttribute('href'))).toEqual(['#templates', '#how-it-works', '#features', '#faq'])
+    expect(links.map((a) => a.getAttribute('href'))).toEqual(['#templates', '#how-it-works', '#features', '#guides', '#faq'])
     for (const a of links) expect(host.querySelector(a.getAttribute('href')!)).not.toBeNull()
   })
 

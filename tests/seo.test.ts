@@ -209,13 +209,12 @@ describe('robots.txt and sitemap.xml', () => {
     expect(buildRobotsTxt(SITE)).not.toMatch(/Disallow:\s*\/editor/)
   })
 
-  it('the sitemap lists the home page — and only it — with its date', () => {
+  it('the sitemap is valid XML that lists the home page first, with its date (the content pages are in seoRender.test.ts)', () => {
     const xml = buildSitemapXml(SITE, '2026-11-17')
     expect(xml).toContain('<?xml version="1.0" encoding="UTF-8"?>')
     expect(xml).toContain('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
-    expect(xml).toContain(`<loc>${SITE}/</loc>`)
-    expect(xml).toContain('<lastmod>2026-11-17</lastmod>')
-    expect(xml.match(/<url>/g)).toHaveLength(1)
+    expect(xml).toContain(`<loc>${SITE}/</loc><lastmod>2026-11-17</lastmod>`)
+    expect(xml.indexOf(`<loc>${SITE}/</loc>`)).toBeLessThan(xml.indexOf('<loc>', xml.indexOf('<loc>') + 1))
     expect(xml).not.toContain('/editor')
   })
 })

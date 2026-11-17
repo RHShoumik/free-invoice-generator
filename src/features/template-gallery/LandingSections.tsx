@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom'
 import { Credit } from '@/components/Credit'
+import { GUIDES_HEADING, SEO_PAGES } from '../../lib/seoPages'
 import {
   FAQ,
   FAQ_HEADING,
@@ -70,9 +72,44 @@ export function Faq() {
   )
 }
 
+/** Links to every content page, as cards: how a visitor — and a crawler — finds them from the home page. */
+export function Guides() {
+  return (
+    <section id="guides" aria-labelledby="guides-heading" className={SECTION}>
+      <h2 id="guides-heading" className={H2}>
+        {GUIDES_HEADING}
+      </h2>
+      <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {SEO_PAGES.map((page) => (
+          <li key={page.path}>
+            <Link
+              to={page.path}
+              className={`${CARD} block h-full outline-none transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring`}
+            >
+              <h3 className="text-base font-bold tracking-tight text-ink">{page.h1}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">{page.summary}</p>
+              <span className="mt-3 block text-sm font-semibold text-brand">Read more →</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
 export function SiteFooter() {
   return (
     <footer className="border-t border-black/5">
+      <nav aria-label="Guides" className="mx-auto flex max-w-6xl flex-wrap justify-center gap-x-6 gap-y-2 px-6 pt-8 text-xs sm:justify-start">
+        <Link to="/" className="text-slate-500 underline decoration-black/10 underline-offset-2 hover:text-ink">
+          Home
+        </Link>
+        {SEO_PAGES.map((page) => (
+          <Link key={page.path} to={page.path} className="text-slate-500 underline decoration-black/10 underline-offset-2 hover:text-ink">
+            {page.h1}
+          </Link>
+        ))}
+      </nav>
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-6 py-8 sm:flex-row">
         <p className="text-xs text-slate-500">
           © {new Date().getFullYear()} {SITE_NAME} — free invoice generator. No sign-up, and your invoices are never uploaded.

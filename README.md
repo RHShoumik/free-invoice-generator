@@ -93,7 +93,9 @@ To go live on Vercel with that address: import the repo at vercel.com/new (Vite 
 
 **Analytics.** `<Analytics />` from [`@vercel/analytics`](https://vercel.com/docs/analytics) is in `src/main.tsx`. It counts anonymous page visits (`/` and `/editor`) — no cookies, and nothing from an invoice ever leaves the browser. It does nothing until you switch Analytics on for the project in Vercel (Project → Analytics → Enable) and redeploy; in local development it only logs to the console. The privacy FAQ on the home page tells visitors about it. To remove it, delete that component and the package.
 
-Everything the site says about itself — title, description, keywords, headline, steps, features, FAQ, and the "Developed by" credit — lives in one file, `src/lib/site.ts`; the page, the `<head>` tags and the structured data all read it, so they cannot disagree. Rankings can't be promised: this is the technical and on-page groundwork, and where the site lands depends on the competition, the site's age and the links pointing at it.
+**Content pages.** Besides the home page there are five pages, each answering a search the home page can't answer in full — `/freelance-invoice-generator`, `/invoice-generator-no-sign-up`, `/how-to-write-an-invoice`, `/invoice-template-pdf` and `/invoice-payment-terms` — each with its own title, description, canonical link, structured data (an `Article` for the guides, plus a breadcrumb and its own FAQ) and a plain-HTML copy. The build writes each one as a file of its own (`dist/<page>/index.html`) so a crawler gets that page's tags and text in the first response, and lists them all in `sitemap.xml`. The editor (`/editor`) gets its own file saying `noindex`; any address the app doesn't know shows a "not found" page that also says `noindex`. **To add or change a page, edit `src/lib/seoPages.ts`** (and bump its `updated` date): the page, its tags, its sitemap entry and the home page's link to it all follow, and `tests/seoPages.test.ts` fails if a page is too thin, repeats another's title, or claims something the app doesn't do.
+
+Everything the site says about itself — title, description, keywords, headline, steps, features, FAQ, and the "Developed by" credit — lives in `src/lib/site.ts` (and the content pages in `src/lib/seoPages.ts`); the page, the `<head>` tags and the structured data all read it, so they cannot disagree. Rankings can't be promised: this is the technical and on-page groundwork, and where the site lands depends on the competition, the site's age and the links pointing at it.
 
 ## Adding a new design
 
@@ -103,6 +105,7 @@ Templates are the main extension point for contributors, at two effort levels: a
 
 - **PDF text isn't selectable.** The PDF export rasterizes the on-screen design (so it's pixel-identical to whichever template is active) rather than generating vector text. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#export-pipeline) for the trade-off.
 - **Very long invoices export as one tall PDF page** rather than paginating across multiple A4 pages.
+- **On a phone, tap to edit; sections can't be dragged.** A finger moving over the page is scrolling it, so on touch screens the fixed designs' sections are not draggable (tapping selects and edits; use a mouse to reposition them). The invoice is shrunk to fit the screen — pinch to zoom in. The bottom tool dock scrolls sideways, and panels float over the page instead of making room beside it.
 
 ## License
 

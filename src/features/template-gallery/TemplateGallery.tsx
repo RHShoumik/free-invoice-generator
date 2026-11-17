@@ -3,32 +3,25 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { HERO, ROBOTS_INDEX, SEO_DESCRIPTION, SEO_TITLE } from '../../lib/site'
 import { usePageMeta } from '../../lib/usePageMeta'
-import { useInvoiceStore } from '../../store/invoiceStore'
-import { Faq, Features, HowItWorks, SiteFooter } from './LandingSections'
+import { useStartInvoice } from '../../lib/useStartInvoice'
+import { Faq, Features, Guides, HowItWorks, SiteFooter } from './LandingSections'
 import { TemplatePickerGrid } from './TemplatePickerGrid'
 
 const STORAGE_KEY = 'invoice-generator/invoice'
-
-/** The design a "one click" start opens: the first, plain one — everything on it is click-to-edit. */
-const DEFAULT_TEMPLATE_ID = 'classic'
 
 const NAV = [
   { href: '#templates', label: 'Templates' },
   { href: '#how-it-works', label: 'How it works' },
   { href: '#features', label: 'Features' },
+  { href: '#guides', label: 'Guides' },
   { href: '#faq', label: 'FAQ' },
 ]
 
 export function TemplateGallery() {
   const navigate = useNavigate()
-  const startNewInvoice = useInvoiceStore((s) => s.startNewInvoice)
+  const startInvoice = useStartInvoice()
   const hasExistingInvoice = typeof window !== 'undefined' && localStorage.getItem(STORAGE_KEY) !== null
   usePageMeta({ title: SEO_TITLE, description: SEO_DESCRIPTION, robots: ROBOTS_INDEX, canonicalPath: '/' })
-
-  function pickTemplate(templateId: string) {
-    startNewInvoice(templateId, true)
-    navigate('/editor')
-  }
 
   // The headline has one highlighted word, in the page's own style.
   const [headBefore, headAfter] = HERO.headline.split('proud')
@@ -81,7 +74,7 @@ export function TemplateGallery() {
               href="/editor"
               onClick={(e) => {
                 e.preventDefault()
-                pickTemplate(DEFAULT_TEMPLATE_ID)
+                startInvoice()
               }}
             >
               {HERO.cta} →
@@ -96,10 +89,11 @@ export function TemplateGallery() {
           <h2 id="templates-heading" className="mb-6 text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl">
             Choose a free invoice template
           </h2>
-          <TemplatePickerGrid onSelect={pickTemplate} />
+          <TemplatePickerGrid onSelect={startInvoice} />
         </section>
         <HowItWorks />
         <Features />
+        <Guides />
         <Faq />
       </main>
 
