@@ -1,0 +1,22 @@
+{
+  "name": "Invoice Generator",
+  "short_name": "Invoices",
+  "description": "Free invoice generator: create a professional invoice online in one click and download it as a PDF or PNG.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6f5f1",
+  "theme_color": "#15171a",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
