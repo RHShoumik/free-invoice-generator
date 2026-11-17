@@ -1,7 +1,8 @@
+import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { buildHeadTags, buildNoscript, buildRobotsTxt, buildSitemapXml, escapeHtml, escapeTag, normalizeSiteUrl } from '../src/lib/seo'
 import type { HeadTag } from '../src/lib/seo'
-import { AUTHOR, FAQ, FEATURES, HERO, KEYWORDS, SEO_DESCRIPTION, SEO_TITLE, SOCIAL_TITLE } from '../src/lib/site'
+import { AUTHOR, FAQ, FEATURES, HERO, KEYWORDS, REPO_URL, SEO_DESCRIPTION, SEO_TITLE, SOCIAL_TITLE } from '../src/lib/site'
 
 const SITE = 'https://invoices.example.com'
 
@@ -206,5 +207,39 @@ describe('robots.txt and sitemap.xml', () => {
     expect(xml).toContain('<lastmod>2026-11-17</lastmod>')
     expect(xml.match(/<url>/g)).toHaveLength(1)
     expect(xml).not.toContain('/editor')
+  })
+})
+
+describe('the live address (.env.production)', () => {
+  const LIVE = 'https://free-invoice-generator.rhshoumik.dev'
+  const value = /^VITE_SITE_URL=(.+)$/m.exec(readFileSync('.env.production', 'utf8'))?.[1]?.trim()
+
+  it('is committed, so every production build knows the site\'s address without any dashboard setting', () => {
+    expect(value).toBe(LIVE)
+  })
+
+  it('is already the clean form (https, lowercase host, no trailing slash) the build will use', () => {
+    expect(normalizeSiteUrl(value)).toBe(value)
+  })
+
+  it('ends up on every address the home page publishes — and on nothing else', () => {
+    const tags = buildHeadTags(value!)
+    const hrefs = [
+      link(tags, 'canonical')[0].attrs?.href,
+      meta(tags, 'property', 'og:url'),
+      meta(tags, 'property', 'og:image'),
+      meta(tags, 'name', 'twitter:image'),
+      graphItem(tags, 'WebApplication').url,
+      graphItem(tags, 'WebSite').url,
+    ]
+    for (const href of hrefs) expect(String(href).startsWith(`${LIVE}/`)).toBe(true)
+    expect(buildRobotsTxt(value!)).toContain(`Sitemap: ${LIVE}/sitemap.xml`)
+    expect(buildSitemapXml(value!, '2026-11-17')).toContain(`<loc>${LIVE}/</loc>`)
+  })
+
+  it('the structured data also points at the open-source repository and the developer', () => {
+    const app = graphItem(buildHeadTags(value!), 'WebApplication')
+    expect(app.sameAs).toEqual(expect.arrayContaining([REPO_URL, AUTHOR.url]))
+    expect(REPO_URL).toBe('https://github.com/RHShoumik/free-invoice-generator')
   })
 })

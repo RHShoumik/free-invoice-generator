@@ -87,13 +87,9 @@ Full write-up: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 The home page is built to rank for searches like *invoice generator*, *free invoice generator* and *one click invoice*: keyword-bearing title, description and headings, a "how it works" section, features and an FAQ on the page, structured data (`WebSite`, `WebApplication`, `FAQPage`), social-share cards, a plain-HTML copy of the page for crawlers that run no JavaScript, `robots.txt` and `sitemap.xml`. The editor (`/editor`) tells search engines not to index it; the home page is what ranks.
 
-**Set the site's address when you build.** Search engines need the exact address for the canonical link, the share-card images and the sitemap, and a wrong one does harm, so the build writes none of them until you give it:
+**The site's address is `https://free-invoice-generator.rhshoumik.dev`**, set in `.env.production` (committed — it isn't a secret, it's printed in the page). Production builds, including Vercel's, read it and write it into the canonical link, the share-card image URLs, `sitemap.xml`, `robots.txt` and the structured data; the build writes none of those without an address, because a wrong one does harm. To deploy at a different address, change that one line, or set `VITE_SITE_URL` in the host's dashboard (it overrides the file) — see `.env.example`.
 
-```bash
-VITE_SITE_URL=https://your-domain.com npm run build
-```
-
-(or put it in a `.env.production` file — see `.env.example`). Without it the build still works and prints a warning. On Vercel, `vercel.json` already does the single-page-app fallback (so refreshing `/editor` works) and caches the hashed assets for a year; set `VITE_SITE_URL` under Project → Settings → Environment Variables and redeploy. On other hosts, make sure `/editor` serves `index.html`. After deploying: add the site in [Google Search Console](https://search.google.com/search-console), submit `https://your-domain.com/sitemap.xml`, and check the page with Google's Rich Results Test.
+To go live on Vercel with that address: import the repo at vercel.com/new (Vite is detected; `vercel.json` handles `/editor` and caching), add `free-invoice-generator.rhshoumik.dev` under the project's Settings → Domains, and create the DNS record Vercel shows — at Hostinger that is a `CNAME` named `free-invoice-generator` (just that part) pointing to the target Vercel gives you. Then add the site in [Google Search Console](https://search.google.com/search-console), submit `https://free-invoice-generator.rhshoumik.dev/sitemap.xml`, and check the page with Google's Rich Results Test. On other hosts, make sure `/editor` serves `index.html`.
 
 Everything the site says about itself — title, description, keywords, headline, steps, features, FAQ, and the "Developed by" credit — lives in one file, `src/lib/site.ts`; the page, the `<head>` tags and the structured data all read it, so they cannot disagree. Rankings can't be promised: this is the technical and on-page groundwork, and where the site lands depends on the competition, the site's age and the links pointing at it.
 

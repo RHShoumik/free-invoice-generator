@@ -10,6 +10,9 @@
 
 export const SITE_NAME = 'Invoice Generator'
 
+/** The open-source repository: shown to search engines as another place this app lives (`sameAs`). */
+export const REPO_URL = 'https://github.com/RHShoumik/free-invoice-generator'
+
 /** The developer credit shown on the landing page and in the editor. */
 export const AUTHOR = { name: 'rhshoumik', url: 'https://rhshoumik.dev' } as const
 
@@ -201,6 +204,7 @@ export function structuredData(siteUrl: string | null): Record<string, unknown> 
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         featureList: FEATURES.map((f) => f.title),
         keywords: KEYWORDS.join(', '),
+        sameAs: [REPO_URL, AUTHOR.url],
         author,
         ...(siteUrl ? { url: `${siteUrl}/` } : {}),
       },
