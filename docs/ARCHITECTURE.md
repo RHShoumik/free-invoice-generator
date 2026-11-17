@@ -303,6 +303,8 @@ The app is a single-page app, so search engines get a mostly empty `index.html` 
 
 **Per-page tags at run time** (`usePageMeta`). Everything above is the home page's, because every route shares the one HTML file. The home page and the editor each call `usePageMeta` so a crawler that runs the page (Google does) sees the right title, description and robots for the route it is on: the editor says `noindex,follow` and has no canonical link — it is a tool, not content, and the home page is what should rank. `robots.txt` deliberately does **not** disallow `/editor`: a page blocked from crawling can never show its `noindex`.
 
+**Analytics.** `<Analytics />` (`@vercel/analytics/react`) is rendered once in `main.tsx`, outside the router's tree but inside `StrictMode`. The script follows client-side navigation, so `/` and `/editor` each count as a page view, with no query strings and no invoice data in any URL. In production it posts to Vercel's own `/_vercel/insights/*` path (inert until Analytics is enabled on the project); in development it only logs to the console. Because the site's pitch is privacy, the copy says *invoices* are never uploaded (not "nothing is") and the privacy FAQ discloses the visit counter — `tests/seo.test.ts` guards both.
+
 **Icons and the share picture** are `public/` files: `favicon.svg`, `favicon-32.png`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `og-image.png` (1200×630) and `site.webmanifest`. The PNGs were drawn with a small Python/Pillow script; to change the look, redraw them (or replace them) at the same names and sizes.
 
 ## Logo handling (`src/lib/image.ts`)

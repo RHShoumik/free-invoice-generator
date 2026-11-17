@@ -75,7 +75,7 @@ export function SiteFooter() {
     <footer className="border-t border-black/5">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-6 py-8 sm:flex-row">
         <p className="text-xs text-slate-500">
-          © {new Date().getFullYear()} {SITE_NAME} — free invoice generator. No sign-up, nothing uploaded.
+          © {new Date().getFullYear()} {SITE_NAME} — free invoice generator. No sign-up, and your invoices are never uploaded.
         </p>
         <Credit />
       </div>

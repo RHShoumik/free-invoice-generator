@@ -60,6 +60,16 @@ describe('the words search engines see', () => {
     expect(new Set(KEYWORDS).size).toBe(KEYWORDS.length)
   })
 
+  it('is honest about privacy: invoices are never uploaded, and the anonymous visit counter is disclosed', () => {
+    const copy = JSON.stringify([HERO, FEATURES, FAQ, SEO_DESCRIPTION]).toLowerCase()
+    // "Nothing is uploaded" would not be true once page visits are counted; what is true is that invoices are never uploaded.
+    expect(copy).not.toContain('nothing is uploaded')
+    const privacy = FAQ.find((f) => f.question === 'Is my invoice data private?')!.answer
+    expect(privacy).toContain('never uploaded')
+    expect(privacy).toContain('Vercel Web Analytics')
+    expect(privacy.toLowerCase()).toContain('no cookies')
+  })
+
   it('does not promise anything the app does not do (the Word export is gone)', () => {
     const copy = JSON.stringify([HERO, FEATURES, FAQ, SEO_TITLE, SEO_DESCRIPTION]).toLowerCase()
     expect(copy).not.toContain('word')

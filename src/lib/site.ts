@@ -77,7 +77,7 @@ export interface Step {
 export const HERO = {
   kicker: 'Free invoice generator',
   headline: 'Make an invoice you’re proud to send.',
-  text: 'Create a professional invoice online in one click: pick a design, change anything by clicking right on the page, and download it as a PDF or PNG. No sign-up, no watermark — and it all happens in your browser, so nothing is uploaded.',
+  text: 'Create a professional invoice online in one click: pick a design, change anything by clicking right on the page, and download it as a PDF or PNG. No sign-up, no watermark — and it all happens in your browser, so your invoices are never uploaded.',
   cta: 'Create an invoice in one click',
 } as const
 
@@ -159,7 +159,7 @@ export const FAQ: Faq[] = [
   {
     question: 'Is my invoice data private?',
     answer:
-      'Yes. Everything happens in your browser. Your invoice is saved on your own device and is never uploaded to a server. Clearing your browser’s site data removes it.',
+      'Yes. Everything happens in your browser. Your invoice is saved on your own device and is never uploaded to a server. Clearing your browser’s site data removes it. The site only counts anonymous page visits with Vercel Web Analytics — no cookies, and nothing from your invoices.',
   },
   {
     question: 'Can I add my logo and change the colours?',

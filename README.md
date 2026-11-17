@@ -91,6 +91,8 @@ The home page is built to rank for searches like *invoice generator*, *free invo
 
 To go live on Vercel with that address: import the repo at vercel.com/new (Vite is detected; `vercel.json` handles `/editor` and caching), add `free-invoice-generator.rhshoumik.dev` under the project's Settings → Domains, and create the DNS record Vercel shows — at Hostinger that is a `CNAME` named `free-invoice-generator` (just that part) pointing to the target Vercel gives you. Then add the site in [Google Search Console](https://search.google.com/search-console), submit `https://free-invoice-generator.rhshoumik.dev/sitemap.xml`, and check the page with Google's Rich Results Test. On other hosts, make sure `/editor` serves `index.html`.
 
+**Analytics.** `<Analytics />` from [`@vercel/analytics`](https://vercel.com/docs/analytics) is in `src/main.tsx`. It counts anonymous page visits (`/` and `/editor`) — no cookies, and nothing from an invoice ever leaves the browser. It does nothing until you switch Analytics on for the project in Vercel (Project → Analytics → Enable) and redeploy; in local development it only logs to the console. The privacy FAQ on the home page tells visitors about it. To remove it, delete that component and the package.
+
 Everything the site says about itself — title, description, keywords, headline, steps, features, FAQ, and the "Developed by" credit — lives in one file, `src/lib/site.ts`; the page, the `<head>` tags and the structured data all read it, so they cannot disagree. Rankings can't be promised: this is the technical and on-page groundwork, and where the site lands depends on the competition, the site's age and the links pointing at it.
 
 ## Adding a new design
